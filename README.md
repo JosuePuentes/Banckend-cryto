@@ -28,7 +28,7 @@ npm install
 2. **Configurar variables de entorno:**
    - Copia el archivo `.env.example` a `.env`
    - Edita `.env` con tus configuraciones:
-     - `MONGODB_URI`: URL de conexión a MongoDB
+     - `MONGODB_URI`: URL de conexión a MongoDB (⚠️ **REQUERIDO**)
      - `JWT_SECRET`: Clave secreta para JWT (cambiar en producción)
      - `PORT`: Puerto del servidor (opcional, por defecto 5000)
 
@@ -42,6 +42,19 @@ npm start
 ```
 
 El servidor estará disponible en `http://localhost:5000`
+
+## 🚀 Despliegue en Render.com
+
+Para desplegar en Render, consulta la guía completa en **[CONFIGURACION_RENDER.md](./CONFIGURACION_RENDER.md)**
+
+**Resumen rápido:**
+1. Crea una cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (gratis)
+2. Obtén tu cadena de conexión MongoDB
+3. En Render, configura las variables de entorno:
+   - `MONGODB_URI` (requerido)
+   - `JWT_SECRET` (requerido)
+   - `JWT_EXPIRES_IN` (opcional, default: 7d)
+   - `PORT` (Render lo asigna automáticamente)
 
 ## 📡 Endpoints de la API
 
@@ -140,6 +153,18 @@ Authorization: Bearer <token>
 **Headers:**
 ```
 Authorization: Bearer <token>
+```
+
+### 5. Health Check
+**GET** `/health`
+
+**Respuesta exitosa (200):**
+```json
+{
+  "status": "ok",
+  "mongodb": "connected",
+  "timestamp": "2024-01-06T00:00:00.000Z"
+}
 ```
 
 ## 🔒 Autenticación
