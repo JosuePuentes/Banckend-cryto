@@ -1,0 +1,180 @@
+╔══════════════════════════════════════════════════════════════════╗
+║          🚀 QUÉ HACER AHORA - PASOS OBLIGATORIOS                 ║
+╚══════════════════════════════════════════════════════════════════╝
+
+⚠️  IMPORTANTE: Node.js NO está instalado en tu computadora.
+    Necesitas hacer estos pasos MANUALMENTE:
+
+╔══════════════════════════════════════════════════════════════════╗
+║  PASO 1: INSTALAR NODE.JS (OBLIGATORIO)                          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+1. Ve a: https://nodejs.org/
+2. Descarga la versión LTS (Recommended For Most Users)
+3. Ejecuta el instalador
+4. Click "Next" en todo
+5. Reinicia la terminal o computadora
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  PASO 2: CONFIGURAR MONGODB ATLAS (5 minutos)                    ║
+╚══════════════════════════════════════════════════════════════════╝
+
+1. Ve a: https://www.mongodb.com/cloud/atlas
+
+2. CREAR CUENTA:
+   - Click "Try Free"
+   - Regístrate con tu email
+   - Verifica tu email
+
+3. CREAR CLUSTER:
+   - Click "Build a Database"
+   - Elige: M0 FREE (el primero)
+   - Provider: AWS
+   - Region: us-east-1 (N. Virginia)
+   - Cluster Name: déjalo como está
+   - Click "Create"
+   - Espera 2-3 minutos
+
+4. CREAR USUARIO DE BASE DE DATOS:
+   - Te aparecerá un formulario
+   - Username: admin
+   - Password: Admin123456 (o la que quieras)
+   - ¡GUARDA LA CONTRASEÑA!
+   - Click "Create User"
+
+5. CONFIGURAR RED:
+   - En "Where would you like to connect from?"
+   - Click "My Local Environment"
+   - IP Address: 0.0.0.0/0
+   - Click "Add Entry"
+   - Click "Finish and Close"
+
+6. OBTENER URL DE CONEXIÓN:
+   - Click "Connect"
+   - Click "Drivers"
+   - Copia la cadena de conexión (se ve así):
+   
+   mongodb+srv://admin:<password>@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+   
+   - ¡GUARDA ESTA URL! La necesitarás en el siguiente paso
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  PASO 3: CONFIGURAR EL PROYECTO                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+1. Abre PowerShell en esta carpeta:
+   - Shift + Click derecho en la carpeta
+   - "Abrir ventana de PowerShell aquí"
+
+2. Copia el archivo de ejemplo:
+   
+   Copy-Item .env.example .env
+
+3. Abre el archivo .env con Notepad:
+   
+   notepad .env
+
+4. Edita esta línea y reemplaza con tu URL de MongoDB Atlas:
+   
+   MONGODB_URI=mongodb+srv://admin:Admin123456@cluster0.xxxxx.mongodb.net/cripto-db?retryWrites=true&w=majority
+   
+   ⚠️ IMPORTANTE:
+   - Reemplaza "Admin123456" con tu contraseña real
+   - Reemplaza "cluster0.xxxxx.mongodb.net" con tu URL real
+   - NO borres "/cripto-db" al final
+
+5. Cambia también el JWT_SECRET:
+   
+   JWT_SECRET=mi-clave-super-secreta-123456789-cambiar
+
+6. Guarda y cierra el archivo
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  PASO 4: INSTALAR DEPENDENCIAS                                   ║
+╚══════════════════════════════════════════════════════════════════╝
+
+En PowerShell (en la carpeta del proyecto), ejecuta:
+
+npm install
+
+(Esto tomará 1-2 minutos)
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  PASO 5: INICIAR EL SERVIDOR                                     ║
+╚══════════════════════════════════════════════════════════════════╝
+
+npm start
+
+✅ Si funciona verás:
+
+   ✅ Conectado a MongoDB
+   📊 Base de datos: cripto-db
+   🚀 Servidor corriendo en el puerto 5000
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  PASO 6: PROBAR EL BACKEND                                       ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Opción A - Navegador:
+   1. Abre: test-frontend.html (doble click)
+   2. Click en "Verificar Conexión"
+   3. Registra un usuario
+
+Opción B - PowerShell (en otra ventana):
+   
+   Invoke-RestMethod http://localhost:5000/health
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  ❌ SI HAY ERRORES                                                ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Error: "npm no se reconoce"
+→ Instala Node.js y reinicia la terminal
+
+Error: "MONGODB_URI no está definido"
+→ Verifica que el archivo .env existe y tiene MONGODB_URI=...
+
+Error: "Authentication failed"
+→ Verifica que la contraseña en .env sea correcta
+→ Reemplaza <password> con tu contraseña real (sin los <>)
+
+Error: "connect ECONNREFUSED"
+→ Verifica la URL de conexión de MongoDB Atlas
+
+Error: "IP not whitelisted"
+→ En MongoDB Atlas → Network Access → Agrega 0.0.0.0/0
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  📚 ARCHIVOS IMPORTANTES                                          ║
+╚══════════════════════════════════════════════════════════════════╝
+
+✅ CONFIGURAR_MONGODB.md      → Guía detallada de MongoDB
+✅ INSTRUCCIONES_RAPIDAS.md   → Instrucciones paso a paso
+✅ test-frontend.html         → Página para probar el backend
+✅ GUIA_FRONTEND.md          → Cómo crear el frontend
+✅ CONFIGURACION_RENDER.md   → Cómo desplegar en internet
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║  🎯 RESUMEN RÁPIDO                                                ║
+╚══════════════════════════════════════════════════════════════════╝
+
+1. Instalar Node.js: https://nodejs.org/
+2. Crear cuenta MongoDB Atlas: https://www.mongodb.com/cloud/atlas
+3. Copiar .env.example a .env
+4. Editar .env con tu URL de MongoDB
+5. npm install
+6. npm start
+7. Abrir test-frontend.html
+
+
+¡LISTO! Tu backend estará funcionando. 🎉
+
+
