@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Backend - Criptomoneda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+
+        .result pre {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .token-display {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Prueba de Backend - Criptomoneda</h1>
+
+        <!-- Estado del servidor -->
+        <div class="card">
+            <h2>Estado del Servidor <span id="serverStatus" class="status offline">Offline</span></h2>
+            <button onclick="checkHealth()">🔍 Verificar Conexión</button>
+            <div id="healthResult" class="result"></div>
+        </div>
+
+        <!-- Registro de usuario -->
+        <div class="card">
+            <h2>📝 Registro de Usuario</h2>
+            <div class="info">
+                <strong>💡 Nota:</strong> Asegúrate de que el servidor esté corriendo en <code>http://localhost:5000</code>
+            </div>
+            
+            <form id="registerForm" onsubmit="registerUser(event)">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" id="nombre" placeholder="Juan Pérez" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="juan@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña (mínimo 6 caracteres):</label>
+                    <input type="password" id="password" placeholder="******" minlength="6" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono (opcional):</label>
+                    <input type="tel" id="telefono" placeholder="+1234567890">
+                </div>
+
+                <button type="submit" id="registerBtn">Registrar Usuario</button>
+            </form>
+
+            <div id="registerResult" class="result"></div>
+        </div>
+
+        <!-- Login -->
+        <div class="card">
+            <h2>🔐 Iniciar Sesión</h2>
+            
+            <form id="loginForm" onsubmit="loginUser(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" placeholder="juan@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Contraseña:</label>
+                    <input type="password" id="loginPassword" placeholder="******" required>
+                </div>
+
+                <button type="submit" id="loginBtn">Iniciar Sesión</button>
+            </form>
+
+            <div id="loginResult" class="result"></div>
+        </div>
+
+        <!-- Perfil (requiere estar logueado) -->
+        <div class="card">
+            <h2>👤 Ver Perfil (Requiere Token)</h2>
+            <div class="info">
+                Debes iniciar sesión primero para obtener un token.
+            </div>
+            <button onclick="getProfile()">Ver Mi Perfil</button>
+            <div id="profileResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+        let authToken = localStorage.getItem('token');
+
+        // Verificar salud del servidor
+        async function checkHealth() {
+            const resultDiv = document.getElementById('healthResult');
+            const statusSpan = document.getElementById('serverStatus');
+            
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                const data = await response.json();
+                
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <strong>✅ Servidor Online</strong>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+                statusSpan.className = 'status online';
+                statusSpan.textContent = 'Online';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>❌ Error de Conexión</strong>
+                    <p>No se puede conectar al servidor. Asegúrate de que:</p>
+                    <ul>
+                        <li>El servidor esté corriendo (npm start)</li>
+                        <li>La URL sea correcta: ${API_URL}</li>
+                        <li>El puerto 5000 esté disponible</li>
+                    </ul>
+                    <pre>${error.message}</pre>
+                `;
+                
+                statusSpan.className = 'status offline';
+                statusSpan.textContent = 'Offline';
+            }
+        }
+
+        // Registrar usuario
+        async function registerUser(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('registerBtn');
+            const resultDiv = document.getElementById('registerResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Registrando...';
+            
+            const userData = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                telefono: document.getElementById('telefono').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.data.token;
+                    localStorage.setItem('token', authToken);
+                    
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Usuario registrado exitosamente</strong>
+                        <p>Usuario: ${data.data.user.nombre}</p>
+                        <p>Email: ${data.data.user.email}</p>
+                        <div class="token-display">
+                            <strong>Token guardado:</strong><br>
+                            ${authToken.substring(0, 50)}...
+                        </div>
+                    `;
+                    
+                    document.getElementById('registerForm').reset();
+                } else {
+                    throw new Error(data.message || 'Error al registrar');
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>❌ Error al registrar</strong>
+                    <p>${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Registrar Usuario';
+            }
+        }
+
+        // Login
+        async function loginUser(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('loginBtn');
+            const resultDiv = document.getElementById('loginResult');
+            
+            btn.disabled = true;
+            btn.textContent = 'Iniciando sesión...';
+            
+            const credentials = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(credentials)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    authToken = data.data.token;
+                    localStorage.setItem('token', authToken);
+                    
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Inicio de sesión exitoso</strong>
+                        <p>Bienvenido: ${data.data.user.nombre}</p>
+                        <p>Email: ${data.data.user.email}</p>
+                        <div class="token-display">
+                            <strong>Token guardado:</strong><br>
+                            ${authToken.substring(0, 50)}...
+                        </div>
+                    `;
+                    
+                    document.getElementById('loginForm').reset();
+                } else {
+                    throw new Error(data.message || 'Credenciales inválidas');
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>❌ Error al iniciar sesión</strong>
+                    <p>${error.message}</p>
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Iniciar Sesión';
+            }
+        }
+
+        // Ver perfil
+        async function getProfile() {
+            const resultDiv = document.getElementById('profileResult');
+            
+            if (!authToken) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>❌ No hay token</strong>
+                    <p>Debes iniciar sesión primero para obtener un token.</p>
+                `;
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/api/auth/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Perfil obtenido</strong>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    throw new Error(data.message || 'Error al obtener perfil');
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>❌ Error</strong>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        // Verificar estado al cargar
+        window.onload = () => {
+            checkHealth();
+        };
+    </script>
+</body>
+</html>
+
